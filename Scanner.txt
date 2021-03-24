@@ -1,0 +1,24 @@
+import java.util.Scanner;
+
+class A {
+
+}
+
+public class Demo {
+	public static void main(String[] args) {
+		String value = "12,14,16,18";
+		Scanner scanner = new Scanner(value);
+		// int a= scanner.nextInt()+5;System.out.println(a);
+
+		scanner.useDelimiter(",");
+
+		
+		while(scanner.hasNext()) {
+			System.out.println(   Integer.parseInt(scanner.next())  /2  );
+		}
+		
+			
+
+	}
+
+}

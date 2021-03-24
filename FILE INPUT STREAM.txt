@@ -1,0 +1,33 @@
+import java.io.FileInputStream;
+
+class MyFileOps {
+
+	void takeFile() {
+		try {
+			FileInputStream fis = new FileInputStream("D:\\myprofile.txt");
+			int i = fis.read();
+			while (i != -1) {
+				// System.out.print((char)fis.read());
+
+				char ch = (char) i;
+				System.out.print(ch);
+				i = fis.read();
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+
+		}
+
+	}
+
+}
+
+public class FileOperations {
+	public static void main(String[] args) {
+		MyFileOps ops = new MyFileOps();
+		ops.takeFile();
+
+	}
+
+}

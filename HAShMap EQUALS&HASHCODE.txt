@@ -1,0 +1,88 @@
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+class Employee {
+	int empno;
+	String name;
+
+	public int getEmpno() {
+		return empno;
+	}
+
+	public void setEmpno(int empno) {
+		this.empno = empno;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public int hashCode() {
+	
+		return 33000;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		//return super.equals(obj);
+		Employee e=(Employee)obj;
+		
+		if(this.empno==e.empno) {
+			return true;
+		}
+		return (this==obj);
+	}
+	
+	
+	
+
+}
+
+public class StaticTest {
+
+	public static void main(String args[]) throws IOException {
+
+		Employee emp = new Employee();
+		emp.setEmpno(101);
+		emp.setName("suresh");
+
+		Employee emp1 = new Employee();
+		emp1.setEmpno(102);
+		emp1.setName("sureshffff");
+		
+		
+		Employee emp2 = new Employee();
+		emp2.setEmpno(101);
+		emp2.setName("suresh");
+
+		Map<Employee, Integer> map = new HashMap<>();
+		map.put(emp, 22);
+		
+		map.put(emp1, 22);
+		map.put(emp2, 223);
+		//map.forEach((Employee ,Integer)->System.out.println(Employee.empno));
+		
+		
+	Iterator<Entry<Employee, Integer>>iterator=	map.entrySet().iterator();
+	
+	while(iterator.hasNext()) {
+		
+		System.out.println(iterator.next().getValue());
+		
+	}
+	
+		
+		
+		
+	}
+
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "com.pack.StudentHiber" table = "StudentHiber">
+      
+      <meta attribute = "class-description">
+         This class contains the student detail. 
+      </meta>
+      
+      <id name = "studentId" type = "int" column = "studentId">
+         <generator class="assigned"/>
+      </id>
+      
+      <property name = "studentFirstName" column = "FirstName" length="20" type = "string"/>
+      <property name = "studentLastName" column = "studentLastName"  length="20"  type = "string"/>
+     
+      
+   </class>
+</hibernate-mapping>

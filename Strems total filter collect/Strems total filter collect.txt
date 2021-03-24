@@ -1,0 +1,92 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+class Student {
+	String name;
+	Integer feePaid;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getFeePaid() {
+		return feePaid;
+	}
+
+	public void setFeePaid(Integer feePaid) {
+		this.feePaid = feePaid;
+	}
+	
+	
+	
+	public  void  lessFeePaid() {
+		
+		//System.out.println(name+" "+feePaid);
+		
+	}
+
+}
+
+public class StreamDemo {
+	public static void main(String[] args) {
+		
+		
+		List<Student>studentList=new ArrayList<>();
+
+		Student student1 = new Student();
+        student1.setName("suresh");
+		student1.setFeePaid(3000);
+
+		
+		
+		Student student2 = new Student();
+
+		student2.setName("samba");
+		student2.setFeePaid(3500);
+
+		
+		Student student3 = new Student();
+
+		student3.setName("Govind");
+		student3.setFeePaid(4500);
+		
+		Student student4 = new Student();
+
+		student4.setName("Dummy");
+		student4.setFeePaid(3800);
+		
+		
+		studentList.add(student1);
+		studentList.add(student2);
+		studentList.add(student3);
+		studentList.add(student4);
+		
+		
+		
+		/*  List<Student>lessFeesPaidList=	studentList.stream().filter(student->student.feePaid<4000).collect(Collectors.toList());
+	lessFeesPaidList.forEach(student->System.out.println(student.getName()+" "+student.getFeePaid()));
+	
+		Long count=	studentList.stream().count();
+		System.out.println(count);
+		
+		
+		 List<Boolean>lessFeesPaidList=	studentList.stream().map(student->student.feePaid>4000).collect(Collectors.toList());
+		 lessFeesPaidList.forEach(s->System.out.println(s));  */
+		 
+		 
+	int total=	studentList.stream().collect(Collectors.summingInt(Student::getFeePaid));
+	
+	System.out.println(total);
+		 
+		 
+		 
+		 
+		
+	}
+
+}

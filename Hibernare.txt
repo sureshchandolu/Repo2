@@ -1,0 +1,1908 @@
+Gunji Ashok Hibernate
+search
+Home
+JAN
+22
+ORM
+
+
+
+
+they are 2 types of relations.
+
+
+
+1) Inheritance  ( IS-A Relation  )
+
+2) Association  ( HAS-A Relation )
+
+
+
+ 
+
+1) Inheritance   ( IS-A Relation )
+
+      1) Table-Per-class
+      2)Table-Per-Subclass
+
+      3)Table-Per-Concreteclass.
+
+
+
+
+
+2) Association  ( HAS-A Relation )
+
+
+
+         1) One-to-Many
+
+         2)Many-To-One.
+
+         3)Many-To-Many
+
+         4)One-To-One
+
+
+
+
+
+
+
+      1) Table-Per-class
+
+
+
+Employee.java :
+
+
+
+
+
+Ex:
+
+
+
+package beans;
+
+
+
+public class Employee {
+
+
+
+	private int id;
+
+	private String name;
+
+	private String email;
+
+	private String salary;
+
+	public Employee() {
+
+		super();
+
+		// TODO Auto-generated constructor stub
+
+	}
+
+	public Employee(int id, String name, String email, String salary) {
+
+		super();
+
+		this.id = id;
+
+		this.name = name;
+
+		this.email = email;
+
+		this.salary = salary;
+
+	}
+
+	public int getId() {
+
+		return id;
+
+	}
+
+	public void setId(int id) {
+
+		this.id = id;
+
+	}
+
+	public String getName() {
+
+		return name;
+
+	}
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+	public String getEmail() {
+
+		return email;
+
+	}
+
+	public void setEmail(String email) {
+
+		this.email = email;
+
+	}
+
+	public String getSalary() {
+
+		return salary;
+
+	}
+
+	public void setSalary(String salary) {
+
+		this.salary = salary;
+
+	}
+
+	
+
+}
+
+SEmployee.java :
+
+package beans;
+
+public class SEmployee extends Employee {
+
+	private String tool;
+
+	public String getTool() {
+		return tool;
+	}
+
+	public void setTool(String tool) {
+		this.tool = tool;
+	}
+
+	public SEmployee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public SEmployee(int id, String name, String email, String salary) {
+		super(id, name, email, salary);
+		// TODO Auto-generated constructor stub
+	}
+
+	public SEmployee(String tool) {
+		super();
+		this.tool = tool;
+	}
+	
+	
+}
+
+HEmployee.java :
+
+
+package beans;
+
+public class HEmployee extends Employee {
+
+	private int wh;
+
+	public HEmployee(int wh) {
+		super();
+		this.wh = wh;
+	}
+
+
+	
+	public HEmployee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public HEmployee(int id, String name, String email, String salary) {
+		super(id, name, email, salary);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public int getWh() {
+		return wh;
+	}
+
+	public void setWh(int wh) {
+		this.wh = wh;
+	}
+	
+}
+
+
+Admin.java :
+
+
+
+package beans;
+
+public class Admin extends Employee {
+
+	private String branchname;
+
+	public Admin() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Admin(int id, String name, String email, String salary) {
+		super(id, name, email, salary);
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getBranchname() {
+		return branchname;
+	}
+
+	public void setBranchname(String branchname) {
+		this.branchname = branchname;
+	}
+
+}
+
+
+
+employee.hbm.xml :
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Employee" table="Employee" schema="system">
+
+<id name="id"  />
+
+<discriminator column="etype" />
+
+
+
+<property name="name"  />
+
+<property name="email"  />
+
+<property name="salary"  />
+
+<subclass name="beans.SEmployee" discriminator-value="SE" >
+
+<property name="tool" />
+
+</subclass>
+
+<subclass name="beans.HEmployee" discriminator-value="HE" >
+
+<property name="wh" />
+
+</subclass>
+
+<subclass name="beans.Admin" discriminator-value="admin" >
+
+<property name="branchname" />
+
+</subclass>
+
+</class>
+
+</hibernate-mapping>
+
+
+
+hibernate.cfg.xml :
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+
+
+
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+
+
+<hibernate-configuration>
+
+
+
+   <session-factory>
+
+
+
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+
+   <property name="connection.username">system</property>
+
+   <property name="connection.password">system</property>
+
+   <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+
+  <property name="show_sql">true</property> 
+
+   <property name="hbm2ddl.auto">create</property> 
+
+       <mapping resource="resources/employee.hbm.xml" />
+
+
+
+</session-factory>
+
+
+
+</hibernate-configuration>
+
+
+
+
+
+Test.java :
+
+
+
+package test;
+
+
+
+import org.hibernate.Session;
+
+import org.hibernate.SessionFactory;
+
+import org.hibernate.Transaction;
+
+import org.hibernate.cfg.Configuration;
+
+
+
+import beans.Admin;
+
+import beans.HEmployee;
+
+import beans.SEmployee;
+
+
+
+public class Test {
+
+
+
+	public static void main(String[] args) {
+
+	
+
+   Configuration cfg=new Configuration();
+
+    cfg.configure("resources/hibernate.cfg.xml");
+
+    SessionFactory factory=cfg.buildSessionFactory();
+
+    Session session=factory.openSession();
+
+    Transaction transaction=session.beginTransaction();
+
+    SEmployee se=new SEmployee(66,"aaa","aaa@gmail.com","200");
+
+    HEmployee he=new HEmployee(77,"bbb","bbb@gmail.com","300");
+
+    Admin admin=new Admin(88,"ccc","ccc@gmail.com","400");
+
+    
+
+    session.save(se);
+
+    session.save(he);
+
+    session.save(admin);
+
+    
+
+    transaction.commit();
+
+    session.close();
+
+    factory.close();
+
+	System.out.println("success ");
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Posted 22nd January by Gunji Ashok Hibernate
+ 
+0 Add a comment
+JAN
+19
+DDL operation
+ 
+
+
+
+package com.bean;
+
+public class Course {
+
+	private int cid;
+
+	private String cname;
+
+	public int getCid() {
+
+		return cid;
+
+	}
+
+	public void setCid(int cid) {
+
+		this.cid = cid;
+
+	}
+
+	public String getCname() {
+
+		return cname;
+
+	}
+
+	public void setCname(String cname) {
+
+		this.cname = cname;
+
+	}
+
+	
+
+}
+
+
+
+
+
+package com.bean;
+
+public class Department {
+
+	private int did;
+	private String dname;
+	private String dmail;
+	public int getDid() {
+		return did;
+	}
+	public void setDid(int did) {
+		this.did = did;
+	}
+	public String getDname() {
+		return dname;
+	}
+	public void setDname(String dname) {
+		this.dname = dname;
+	}
+	public String getDmail() {
+		return dmail;
+	}
+	public void setDmail(String dmail) {
+		this.dmail = dmail;
+	}
+	
+}
+
+
+
+
+
+
+
+
+package com.bean;
+
+public class Employee {
+
+	private int eid;
+	private String ename;
+	private String email;
+	public int getEid() {
+		return eid;
+	}
+	public void setEid(int eid) {
+		this.eid = eid;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
+}
+
+
+
+
+
+
+
+package com.bean;
+
+public class Student {
+
+	private int id;
+	private String name;
+	private String email;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+}
+
+
+
+
+
+course.hbm.xml :
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Course" table="course" schema="system">
+
+<id name="cid"  />
+<property name="cname" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+department.hbm.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Department" table="Department" schema="system">
+
+<id name="did" />
+<property name="dname" />
+<property name="dmail" />
+
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+
+employee.hbm.xml :
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Employee" table="Employee" schema="system">
+
+<id name="eid"  />
+<property name="ename" />
+<property name="email" />
+
+
+</class>
+
+</hibernate-mapping>
+
+
+
+student.hbm.xml :
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Student" table="student" schema="system">
+
+<id name="id"   />
+<property name="name" />
+<property name="email" />
+
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+
+
+hibernate.cfg.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+   <session-factory>
+
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+   <property name="connection.username">system</property>
+   <property name="connection.password">system</property>
+   <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+  <property name="format_sql">true</property> 
+  <property name="show_sql">true</property> 
+   <property name="hbm2ddl.auto">create</property> 
+       <mapping resource="resource/student.hbm.xml" />
+       <mapping resource="resource/course.hbm.xml" />
+        <mapping resource="resource/department.hbm.xml" />
+         <mapping resource="resource/employee.hbm.xml" />
+         
+
+</session-factory>
+
+</hibernate-configuration>
+
+
+
+test.java :
+
+
+
+package test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg=new Configuration();
+		cfg.configure("resource/hibernate.cfg.xml");
+		SessionFactory factory=cfg.buildSessionFactory();
+		Session session=factory.openSession();
+		System.out.println("tables created");
+
+	}
+
+}
+Posted 19th January by Gunji Ashok Hibernate
+ 
+0 Add a comment
+JAN
+18
+CURD (update operation)
+ 
+
+
+
+student.java
+
+package beans;
+
+public class Student 
+
+{
+
+	private int id;
+
+	private String name;
+
+	private String email;
+
+	private String address;
+
+	public int getId() {
+
+		return id;
+
+	}
+
+	public void setId(int id) {
+
+		this.id = id;
+
+	}
+
+	public String getName() {
+
+		return name;
+
+	}
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+	public String getEmail() {
+
+		return email;
+
+	}
+
+	public void setEmail(String email) {
+
+		this.email = email;
+
+	}
+
+	public String getAddress() {
+
+		return address;
+
+	}
+
+	public void setAddress(String address) {
+
+		this.address = address;
+
+	}	
+
+}
+
+
+
+student.hbm.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="beans.Student" table="student006" schema="system">
+
+<id name="id" column="id"  />
+<property name="name" column="NAME" />
+<property name="email" column="email" />
+<property name="address" column="address" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+hibernate.cfg.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+   <session-factory>
+
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+   <property name="connection.username">system</property>
+   <property name="connection.password">system</property>
+   <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+  <property name="show_sql">true</property> 
+   <property name="hbm2ddl.auto">update</property> 
+       <mapping resource="resources/student.hbm.xml" />
+
+</session-factory>
+
+</hibernate-configuration>
+
+
+test.java :
+
+package test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import beans.Student;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg = new Configuration();
+		cfg.configure("resources/hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();
+		Session session = factory.openSession();
+		Transaction transaction = session.beginTransaction();
+
+		
+		  Student student=new Student(); 
+		  student.setId(4);
+		  student.setName("ashok");
+		  student.setEmail("xyz@gmail.com");
+		  student.setAddress("chennai");
+		  
+		  session.update(student); 
+		  transaction.commit();
+		 session.close();
+		factory.close();
+		System.out.println(" update success");
+	}
+
+}
+
+
+=============================================================================================
+Update operation with get()  {select operation }
+
+
+package test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import beans.Student;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg = new Configuration();
+		cfg.configure("resources/hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();
+		Session session = factory.openSession();
+		Transaction transaction = session.beginTransaction();
+
+		  session.get(Student.class, 4);
+		  Student student=new Student(); 
+		  student.setId(4);
+		  student.setName("ashok");
+		  student.setEmail("xyz@gmail.com");
+		  student.setAddress("chennai");
+		  
+		  session.merge(student); 
+		  transaction.commit();
+		 session.close();
+		factory.close();
+		System.out.println(" update success");
+	}
+
+}
+
+
+
+Delete Operation :
+
+
+
+package test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import beans.Student;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg = new Configuration();
+		cfg.configure("resources/hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();
+		Session session = factory.openSession();
+		Transaction transaction = session.beginTransaction();
+
+		Student student=new Student();
+		  student.setId(4);
+		  session.delete(student);;
+		transaction.commit();
+		 session.close();
+		factory.close();
+		System.out.println("delete success");
+	}
+
+}
+
+
+
+
+select operation :
+
+
+
+package test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import beans.Student;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg = new Configuration();
+		cfg.configure("resources/hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();
+		Session session = factory.openSession();
+		
+		Object o=session.get(Student.class,1);
+		Student student=(Student)o;
+		System.out.println(student.getId());
+		System.out.println(student.getName());
+		System.out.println(student.getEmail());
+		System.out.println(student.getAddress());
+		 session.close();
+		factory.close();
+		System.out.println("select success");
+	}
+
+}
+
+Posted 18th January by Gunji Ashok Hibernate
+ 
+0 Add a comment
+JAN
+8
+HQL Examples
+
+
+ package com.bean;
+
+public class Employee {
+
+
+
+	private int id;
+
+	private String name;
+
+	private String email;
+
+	private int salary;
+
+	public int getId() {
+
+		return id;
+
+	}
+
+	public void setId(int id) {
+
+		this.id = id;
+
+	}
+
+	public String getName() {
+
+		return name;
+
+	}
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+	public String getEmail() {
+
+		return email;
+
+	}
+
+	public void setEmail(String email) {
+
+		this.email = email;
+
+	}
+
+	public int getSalary() {
+
+		return salary;
+
+	}
+
+	public void setSalary(int salary) {
+
+		this.salary = salary;
+
+	}
+
+	public Employee(int id, String name, String email, int salary) {
+
+		super();
+
+		this.id = id;
+
+		this.name = name;
+
+		this.email = email;
+
+		this.salary = salary;
+
+	}
+
+	public Employee() {
+
+		super();
+
+		// TODO Auto-generated constructor stub
+
+	}
+
+	
+
+}
+
+
+com.cfg.employee.hbm.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="com.bean.Employee" table="employee">
+
+<id name="id" column="id"  />
+
+<property name="name" column="NAME" />
+
+<property name="salary" column="salary" />
+
+<property name="email" column="EMAIL" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+com.cfg.hibernate.cfg.xml :
+
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+   <session-factory>
+
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+
+   <property name="connection.username">system</property>
+
+   <property name="connection.password">system</property>
+
+    <mapping resource="com/cfgs/employee.hbm.xml" />
+
+</session-factory>
+
+</hibernate-configuration>
+
+
+
+
+
+package com.test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import com.bean.Employee;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg=new Configuration();
+		cfg.configure("/com/cfgs/hibernate.cfg.xml");
+		SessionFactory factory=cfg.buildSessionFactory();
+		Session session=factory.openSession();
+		
+        Transaction transaction=session.beginTransaction();
+        
+        Employee emp1=new Employee(101,"gunji","rst@gmail.com",5000);
+        Employee emp2=new Employee(102,"ashok","abc@gmail.com",6000);  
+        Employee emp3=new Employee(103,"ramesh","def@gmail.com",7000);
+     
+        session.save(emp1);
+        session.save(emp2);
+        session.save(emp3);
+        transaction.commit();
+        session.close();
+        factory.close();
+        System.out.println("success ..");
+	}
+
+}				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Posted 8th January by Gunji Ashok Hibernate
+ 
+0 Add a comment
+JAN
+7
+HQL(Hibernate Query Language)
+ 
+
+
+
+package com.beans;
+
+public class OldStudent {
+
+	private int id;
+
+	private String name;
+
+	private String email;
+
+	private String address;
+
+	public OldStudent() {
+
+		super();
+
+		// TODO Auto-generated constructor stub
+
+	}
+
+	public OldStudent(int id, String name, String email, String address) {
+
+		super();
+
+		this.id = id;
+
+		this.name = name;
+
+		this.email = email;
+
+		this.address = address;
+
+	}
+
+	public int getId() {
+
+		return id;
+
+	}
+
+	public void setId(int id) {
+
+		this.id = id;
+
+	}
+
+	public String getName() {
+
+		return name;
+
+	}
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+	public String getEmail() {
+
+		return email;
+
+	}
+
+
+
+	public void setEmail(String email) {
+
+		this.email = email;
+
+	}
+
+	public String getAddress() {
+
+		return address;
+
+	}
+
+	public void setAddress(String address) {
+
+		this.address = address;
+
+	}
+
+}
+
+
+
+
+
+package com.beans;
+
+public class NewStudent
+{
+
+	private int id;
+	private String name;
+	private String email;
+	private String address;
+	
+	public NewStudent() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public NewStudent(int id, String name, String email, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+}
+
+
+
+
+hibernate.cfgs.xml
+
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+   <session-factory>
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+   <property name="connection.username">system</property>
+   <property name="connection.password">system</property>
+   
+   
+   <mapping resource="com/cfgs/NewStudent.hbm.xml" />
+   
+   <mapping resource="com/cfgs/oldstudent.hbm.xml" />
+</session-factory>
+</hibernate-configuration>
+
+
+NewStudent.hbm.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+<hibernate-mapping>
+<class name="com.beans.NewStudent" table="newstudent">
+
+<id name="id" column="id"  />
+<property name="name" column="name" />
+<property name="email" column="email" />
+<property name="address" column="address" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+
+oldstudent.hbm.xml  :
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+<hibernate-mapping>
+<class name="com.beans.OldStudent" table="oldstudent">
+
+<id name="id" column="id"  />
+<property name="name" column="NAME" />
+<property name="email" column="EMAIL" />
+<property name="address" column="ADDRESS" />
+
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+
+
+Test.java
+
+
+package com.test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import com.beans.OldStudent;
+
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg=new Configuration();
+		
+        cfg.configure("/com/cfgs/hibernate.cfgs.xml");
+        SessionFactory factory=cfg.buildSessionFactory();
+        Session session=factory.openSession();
+        Transaction transaction=session.beginTransaction();
+        
+        OldStudent os1=new OldStudent(111,"abc","abc@gmail.com","hyd");
+        OldStudent os2=new OldStudent(222,"lmn","lmn@gmail.com","hyd");
+        OldStudent os3=new OldStudent(333,"xyz","xyz@gmail.com","hyd");
+        session.save(os1);
+        session.save(os2);
+        session.save(os3);
+        transaction.commit();
+        session.close();
+        factory.close();
+        System.out.println("success");
+        
+	}
+
+}
+
+
+
+Test2.java
+
+package com.test;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+public class Test2 {
+
+	public static void main(String[] args) {
+		Configuration cfg=new Configuration();
+		
+        cfg.configure("/com/cfgs/hibernate.cfgs.xml");
+        SessionFactory factory=cfg.buildSessionFactory();
+        Session session=factory.openSession();
+        Transaction transaction=session.beginTransaction();
+       String hql="insert into NewStudent(id,name,email,address) select s.id,s.name,s.email,s.address from OldStudent s";
+        Query q=session.createQuery(hql);
+       int i= q.executeUpdate();
+       System.out.println("no. of rows effected "+i);
+       System.out.println("success 2");
+       transaction.commit();
+       //session.save();
+       session.close();
+       factory.close();
+       
+        
+	}
+
+}
+
+
+===================================================================
+
+Update Operation :
+
+
+package com.bean;
+
+public class Student {
+
+	private int id;
+	private String name;
+	private String email;
+	private String address;
+	public Student(int id, String name, String email, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+	}
+	public Student() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+}
+
+
+
+com.cfgs.hibernate.cfg.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+   <session-factory>
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+   <property name="connection.username">system</property>
+   <property name="connection.password">system</property>
+   
+   
+   <mapping resource="com/cfgs/student.hbm.xml" />
+   
+</session-factory>
+</hibernate-configuration>
+
+
+
+
+
+student.hbm.xml :
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+<hibernate-mapping>
+<class name="com.bean.Student" table="newstudent">
+
+<id name="id" column="id"  />
+<property name="name" column="name" />
+<property name="email" column="email" />
+<property name="address" column="address" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+
+com.test :
+
+
+package com.test;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+public class Test {
+
+	public static void main(String[] args) {
+		Configuration cfg=new Configuration();
+		cfg.configure("com/cfgs/hibernate.cfg.xml");
+
+		SessionFactory factory=cfg.buildSessionFactory();
+		Session session=factory.openSession();
+
+		Transaction tx=session.beginTransaction();
+		String hql="update Student set id=444 where name='abc' ";
+	
+		Query query=session.createQuery(hql);
+   int i=query.executeUpdate();
+   System.out.println("row updated :"+i);
+		tx.commit();
+		
+		session.close();
+		factory.close();
+		System.out.println("success");
+	}
+
+}
+Posted 7th January by Gunji Ashok Hibernate
+ 
+0 Add a comment
+DEC
+31
+Hibernate First Application
+ 
+
+employee.hbm.xml:
+
+
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+
+"-//Hibernate/Hibernate Mapping DTD//EN"
+
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+<class name="com.nt.domain.Employee" table="gunji">
+
+<id name="eid" column="id"  />
+
+<property name="firstname" column="FIRSTNAME" />
+
+<property name="lastname" column="LASTNAME" />
+
+<property name="email" column="EMAIL" />
+
+</class>
+
+</hibernate-mapping>
+
+
+
+hibernate.cfg.xml
+
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<!DOCTYPE hibernate-configuration SYSTEM 
+
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+   <session-factory>
+
+   <property name="connection.driver_name">oracle.jdbc.driver.OracleDriver</property>
+
+   <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+
+   <property name="connection.username">system</property>
+
+   <property name="connection.password">system</property>
+
+    <mapping resource="com/nt/cfgs/employee.hbm.xml" />
+
+</session-factory>
+
+</hibernate-configuration>
+
+
+com.nt.domain
+
+package com.nt.domain;
+
+
+
+public class Employee {
+
+	private int eid;
+
+	private String firstname;
+
+	private String lastname;
+
+	private String email;
+
+	public int getEid() {
+
+		return eid;
+
+	}
+
+	public void setEid(int eid) {
+
+		this.eid = eid;
+
+	}
+
+	public String getFirstname() {
+
+		return firstname;
+
+	}
+
+	public void setFirstname(String firstname) {
+
+		this.firstname = firstname;
+
+	}
+
+	public String getLastname() {
+
+		return lastname;
+
+	}
+
+	public void setLastname(String lastname) {
+
+		this.lastname = lastname;
+
+	}
+
+	public String getEmail() {
+
+		return email;
+
+	}
+
+	public void setEmail(String email) {
+
+		this.email = email;
+
+	}
+
+}
+
+
+com.nt.test
+
+
+package com.nt.test;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import com.nt.domain.Employee;
+
+public class Test {
+
+	public static void main(String[] args) {
+      Session ses=null;
+      Transaction tx=null;
+     Configuration cfg=null;
+     SessionFactory factory=null;
+     cfg=new Configuration();
+    cfg= cfg.configure("/com/nt/cfgs/hibernate.cfgs.xml");
+     factory=cfg.buildSessionFactory();
+     ses=factory.openSession();
+     Employee emp=new Employee();
+     emp.setEid(1000);
+     emp.setFirstname("gunji");
+	 emp.setLastname("Ashok");
+	 emp.setEmail("ashok@gmail.com");
+	 
+	 try {
+		 tx=ses.beginTransaction();
+		 
+		 ses.save(emp);
+		 
+		 tx.commit();
+		 System.out.println("object saved/Record inserted");
+	 }catch(Exception e)
+	 {
+		 
+		 tx.rollback();
+	 }
+	 ses.close();
+	 factory.close();
+	}
+
+}
+
+
+Posted 31st December 2020 by Gunji Ashok Hibernate
+ 
+0 Add a comment
+DEC
+14
+Persistance
+ Persistance:
+
+   The Process of storing & Maintaining data for long time is called Persistance.
+
+Definition Of Hibernate :
+
+      Hibernate is an Open Source, lightweight ,non-invasive java ORM framework to develop Objects s/w independent persistence logic in all java ,JEE ,java framework Apps. 
+
+
+
+Posted 14th December 2020 by Gunji Ashok Hibernate
+ 
+0 Add a comment
+DEC
+12
+Hibernate Index
+ 
+
+Hibernate Topics :
+
+
+
+    https://gunjiashokhibernate.blogspot.com/
+
+
+

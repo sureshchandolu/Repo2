@@ -1,0 +1,50 @@
+class InvalidAgeException extends Exception {
+
+	@Override
+	public String toString() {
+		return "InvalidAgeException plz check";
+	}
+	
+	
+	
+	
+
+}
+
+class Voter {
+	
+	
+	
+	
+
+	public void validateVoter(int age)  {
+//		try {
+//			
+//			if(age<17)
+//			throw new InvalidAgeException();
+//
+//		} catch (InvalidAgeException e) {
+//            System.out.println(e);
+//		}
+
+		
+		
+		
+		
+		
+	}
+}
+
+public class ExceptionDemo {
+	public static void main(String[] args) {
+
+		Voter voter = new Voter();
+		
+		
+			voter.validateVoter(12);
+		
+
+
+	}
+
+}

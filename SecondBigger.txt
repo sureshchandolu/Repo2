@@ -1,0 +1,28 @@
+
+public class FindSecondbiggerDemo {
+	public static void main(String[] args) {
+		int numbers[] = {9,106, 104, 10, 23, 55, 44, 88, 10 };
+
+		int secondBigger = 0;
+		int firstBigger = 0;
+
+		for (int no : numbers) {
+			if (no >= firstBigger) {
+				secondBigger = firstBigger;
+				firstBigger = no;
+
+			}
+			else {
+				if(no>=secondBigger) {
+					
+					secondBigger=no;
+					
+				}
+			}
+
+		}
+
+		System.out.println(secondBigger);
+	}
+
+}
